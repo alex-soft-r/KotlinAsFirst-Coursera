@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task1
 
 import lesson1.task1.discriminant
@@ -62,7 +63,16 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    if (((age % 100 >= 10) && (age % 100 <= 20)) || ((age % 10 in (5..9)) || (age % 10 == 0))) {
+        return "$age лет"
+    } else if ((age % 10 == 1)) {
+        return "$age год"
+    } else if (age % 10 in (2..4)) {
+        return "$age года"
+    }
+    return "Неверное значение возраста"
+}
 
 /**
  * Простая
@@ -73,7 +83,22 @@ fun ageDescription(age: Int): String = TODO()
  */
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
-                   t3: Double, v3: Double): Double = TODO()
+                   t3: Double, v3: Double): Double {
+
+    val p1 = v1 * t1
+    val p2 = v2 * t2
+    val p3 = v3 * t3
+
+    val half_path = (p1 + p2 + p3) / 2.0
+
+    if (half_path <= p1) {
+        return half_path / v1;
+    } else if (half_path <= (p1 + p2)) {
+        return t1 + (half_path - p1) / v2;
+    } else {
+        return t1 + t2 + (half_path - p1 - p2) / v3;
+    }
+}
 
 /**
  * Простая
@@ -86,7 +111,17 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int = TODO()
+                       rookX2: Int, rookY2: Int): Int {
+
+    if ((kingX != rookX1) and (kingX != rookX2) and (kingY != rookY1) and (kingY != rookY2))
+        return 0
+    else if (((kingX == rookX1) or (kingX == rookX2)) and ((kingY == rookY1) or (kingY == rookY2)))
+        return 3
+    else if ((kingX == rookX1) or (kingY == rookY1))
+        return 1
+    else
+        return 2
+}
 
 /**
  * Простая
@@ -100,7 +135,27 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
  */
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
-                          bishopX: Int, bishopY: Int): Int = TODO()
+                          bishopX: Int, bishopY: Int): Int {
+
+    //Вернуть 0, если угрозы нет
+    if (((kingX != rookX) and (kingY != rookY))
+            && (Math.abs(kingX - bishopX) != Math.abs(kingY - bishopY)))
+        return 0
+    //1, если угроза только от ладьи
+    if ((kingX == rookX) or (kingY == rookY)) {
+        if (((bishopX == rookX && rookX == kingX) || (bishopY == rookY && rookY == kingY)) /*&&
+                (((bishopY>rookY && kingY>bishopY)||(bishopY<rookY && kingY<bishopY))
+                        ||((bishopX>rookX && kingX>bishopX)||(bishopX<rookX && kingX<bishopX)))*/)
+            return 2
+        else {
+            return 1
+        }
+    }
+    //2, если только от слона
+    if ((Math.abs(kingX - bishopX) == Math.abs(kingY - bishopY)))
+        return 2
+    return 3
+}
 
 /**
  * Простая
@@ -110,7 +165,16 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    if (a >= b + c || b >= a + c || c >= b + a) // неравенство треугольника
+        return -1
+    else if (a * a == b * b + c * c || b * b == a * a + c * c || c * c == b * b + a * a)
+        return 1
+    else if (a * a > b * b + c * c || b * b > a * a + c * c || c * c > b * b + a * a)
+        return 2
+    else
+        return 0
+}
 
 /**
  * Средняя
@@ -120,4 +184,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    return when {
+        b < c || a > d             -> -1
+        a <= c && c <= b && b <= d -> b - c
+        c <= a && a <= d && d <= b -> d -a
+        c <= a && d <= d           -> b - a
+        else                       -> d - c
+    }
+}
